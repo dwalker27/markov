@@ -30,14 +30,14 @@ class MarkovMachine {
     let i;
     do {
       i = Math.floor(Math.random() * keys.length);
-    } while (keys[i] === keys[i].toUpperCase());
+    } while (keys[i][0] !== keys[i][0].toUpperCase());
 
     result.push(keys[i]);
 
     for (i = 1; i < numWords; i++) {
       let rnd = Math.floor(Math.random() * this.chains[result[i - 1]].length);
       result.push(this.chains[result[i - 1]][rnd]);
-      if (this.chains[result[i - 1]][rnd] === null)
+      if (this.chains[result[i - 1]][rnd] === null || this.chains[result[i - 1]][rnd].endsWith("."))
         break;
     }
     return result.join(' ');
