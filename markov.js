@@ -25,7 +25,13 @@ class MarkovMachine {
   makeText(numWords = 100) {
     let result = [];
     let keys = Object.keys(this.chains);
-    let i = Math.floor(Math.random() * keys.length);
+
+    //make sure first letter is capitalized
+    let i;
+    do {
+      i = Math.floor(Math.random() * keys.length);
+    } while (keys[i] === keys[i].toUpperCase());
+
     result.push(keys[i]);
 
     for (i = 1; i < numWords; i++) {
