@@ -1,11 +1,22 @@
 /** Command-line tool to generate Markov text. */
 const markov = require('./markov');
 const fs = require('fs');
-const https = require('https');
+const axios = require('axios');
 
 var myArgs = process.argv.slice(2);
 
 let mm = new markov.MarkovMachine("the cat in the hat");
+
+async function getURLText(url) {
+  let resp;
+  try {
+    resp = await axios.get(url);
+  } catch (err) {
+    console.log(err);
+  }
+  mm = new markov.MarkovMachine(resp.data);
+  console.log(mm.makeText());
+}
 
 let words = "";
 
@@ -23,24 +34,7 @@ if (myArgs.length == 0) {
       });
       break;
     case "url":
-      let options = { host: myArgs[1], family: 4, port: 80, path: '/', method: 'GET' };
-      const req = https.request(options, (res) => {
-        console.log(`statusCode: ${res.statusCode}`);
-
-        var data = '';
-        res.on('data', (chunk) => {
-          data += chunk;
-        });
-        res.on('end', () => {
-          console.log(data);
-        });
-      });
-
-      req.on('error', (e) => {
-        console.log(e);
-      });
-
-      req.end();
+      getURLText(myArgs[1]);
       break;
     default:
       console.log('ERROR: Please choose a different set of args');
