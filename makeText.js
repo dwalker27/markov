@@ -5,7 +5,19 @@ const axios = require('axios');
 
 var myArgs = process.argv.slice(2);
 
-let mm = new markov.MarkovMachine("the cat in the hat");
+function generateText(text, num = 100) {
+  let mm = new markov.MarkovMachine(text);
+  console.log(mm.makeText(num));
+}
+
+function getFileText(file) {
+  fs.readFile(file, 'utf8', (err, data) => {
+    if (err) {
+      return console.log(err);
+    }
+    generateText(data);
+  });
+}
 
 async function getURLText(url) {
   let resp;
@@ -14,8 +26,7 @@ async function getURLText(url) {
   } catch (err) {
     console.log(err);
   }
-  mm = new markov.MarkovMachine(resp.data);
-  console.log(mm.makeText());
+  generateText(resp.data);
 }
 
 let words = "";
@@ -25,13 +36,7 @@ if (myArgs.length == 0) {
 } else {
   switch (myArgs[0]) {
     case "file":
-      fs.readFile(myArgs[1], 'utf8', (err, data) => {
-        if (err) {
-          return console.log(err);
-        }
-        let mm = new markov.MarkovMachine(data);
-        console.log(mm.makeText());
-      });
+      getFileText(myArgs[1]);
       break;
     case "url":
       getURLText(myArgs[1]);
