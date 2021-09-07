@@ -23,7 +23,6 @@ class MarkovMachine {
   }
 
   makeText(numWords = 100) {
-    console.log(this.chains);
     let result = [];
     let keys = Object.keys(this.chains);
     let i = Math.floor(Math.random() * keys.length);
