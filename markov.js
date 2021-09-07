@@ -2,30 +2,43 @@ class MarkovMachine {
   constructor(text) {
     let words = text.split(/[ \r\n]+/);
     this.words = words.filter(c => c !== "");
-    this.makeChains(words);
+    this.chains = this.makeChains(words);
   }
 
-  makeChains(words) {
+  makeChains() {
     let chains = {};
-    for (let i = 0; i < words.length; i++) {
+    for (let i = 0; i < this.words.length; i++) {
       let keys = Object.keys(chains);
       //if not the last word, use it, otherwise, declare null
-      let word = i != words.length - 1 ? words[i + 1] : null;
-      if (chains.hasOwnProperty(words[i])) {
+      let word = i != this.words.length - 1 ? this.words[i + 1] : null;
+      if (chains.hasOwnProperty(this.words[i])) {
         //existing word, just add to the array
-        chains[words[i]].push(word);
+        chains[this.words[i]].push(word);
       } else {
-        chains[words[i]] = [];
-        chains[words[i]].push(word);
+        chains[this.words[i]] = [];
+        chains[this.words[i]].push(word);
       }
     }
-    console.log(chains);
     return chains;
   }
 
   makeText(numWords = 100) {
-    // TODO
+    console.log(this.chains);
+    let result = [];
+    let keys = Object.keys(this.chains);
+    let i = Math.floor(Math.random() * keys.length);
+    result.push(keys[i]);
+
+    for (i = 1; i < numWords; i++) {
+      let rnd = Math.floor(Math.random() * this.chains[result[i - 1]].length);
+      if (this.chains[result[i - 1]][rnd] === null)
+        break;
+
+      result.push(this.chains[result[i - 1]][rnd]);
+    }
+    return result.join(' ');
   }
 }
 
 let mm = new MarkovMachine("the cat in the hat");
+console.log(mm.makeText());
