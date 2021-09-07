@@ -36,10 +36,9 @@ class MarkovMachine {
 
     for (i = 1; i < numWords; i++) {
       let rnd = Math.floor(Math.random() * this.chains[result[i - 1]].length);
+      result.push(this.chains[result[i - 1]][rnd]);
       if (this.chains[result[i - 1]][rnd] === null)
         break;
-
-      result.push(this.chains[result[i - 1]][rnd]);
     }
     return result.join(' ');
   }
